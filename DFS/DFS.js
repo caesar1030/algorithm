@@ -8,7 +8,7 @@ const dfs = (v) => {
 
   for (i of grpah[v]) {
     if (!visited[i]) {
-      dfs(i, visited);
+      dfs(i);
     }
   }
 };
