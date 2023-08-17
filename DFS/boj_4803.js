@@ -9,9 +9,6 @@ while (true) {
   const [n, m] = input[line].split(' ').map(Number);
   if (n === 0 && m === 0) break;
 
-  const graph = Array.from(Array(n + 1), () => new Array());
-  const visited = Array(n + 1).fill(false);
-
   const dfs = (v, parent) => {
     visited[v] = true;
     let rv = true;
@@ -25,6 +22,9 @@ while (true) {
 
     return rv;
   };
+
+  const graph = Array.from(Array(n + 1), () => new Array());
+  const visited = Array(n + 1).fill(false);
 
   for (let i = 1; i <= m; i++) {
     const [a, b] = input[line + i].split(' ').map(Number);
