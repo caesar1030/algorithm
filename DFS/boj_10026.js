@@ -1,4 +1,5 @@
 // 16:15시작
+// 16:45 성공
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
 let input = fs.readFileSync(filePath).toString().split('\n');
