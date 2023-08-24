@@ -15,6 +15,8 @@ const permutaition = (start) => {
     }, 0);
 
     ans = Math.max(ans, temp);
+
+    return;
   }
 
   for (let i = start; i < n; i++) {
