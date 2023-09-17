@@ -78,4 +78,3 @@ while (!q.empty()) {
 }
 
 console.log(graph[x - 1][y - 1]);
-3``;
