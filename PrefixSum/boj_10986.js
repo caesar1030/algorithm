@@ -5,18 +5,20 @@ let line = 0;
 
 const [n, m] = input[line++].split(' ').map(Number);
 const arr = input[line++].split(' ').map(Number);
-const sum = new Array(n + 1).fill(0);
-const temp = new Array(m).fill(0);
 
-let ans = 0;
+const psum = new Array(n + 1).fill(0);
 
 for (let i = 1; i <= n; i++) {
-  sum[i] = arr[i - 1] + sum[i - 1];
-  temp[sum[i] % m]++;
+  psum[i] = psum[i - 1] + arr[i - 1];
 }
 
-for (let i = 0; i < m; i++) {
-  ans += (temp[i] * (temp[i] - 1)) / 2;
-}
+const mpsum = psum.map((val) => val % m);
 
-console.log(ans);
+const temp = new Array(m).fill(0);
+
+mpsum.forEach((val) => temp[val]++);
+console.log(
+  temp
+    .filter((val) => val > 1)
+    .reduce((acc, cur) => acc + (cur * (cur - 1)) / 2, 0)
+);
