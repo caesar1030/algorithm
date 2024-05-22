@@ -4,13 +4,12 @@ let input = fs.readFileSync(filePath).toString().split('\n');
 let line = 0;
 
 const n = +input[line];
-
-let temp = 0;
 let sum = 0;
-
-while (n >= sum) {
-  ++temp;
-  sum += temp;
+let ans = 0;
+let now = 1;
+while (sum + now <= n) {
+  sum += now++;
+  ++ans;
 }
 
-console.log(temp - 1);
+console.log(ans);
