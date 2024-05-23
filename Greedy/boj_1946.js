@@ -6,21 +6,26 @@ let line = 0;
 let t = +input[line++];
 
 while (t--) {
-  let n = +input[line++];
-  let arr = [];
+  const n = +input[line++];
+
+  const arr = [];
   for (let i = 0; i < n; i++) {
-    arr.push(input[line++].split(' ').map(Number));
+    const [a, b] = input[line++].split(' ').map(Number);
+    arr.push([a, b]);
   }
 
+  // 서류 순위
   arr.sort((a, b) => a[0] - b[0]);
 
-  let ans = 0;
-  arr.reduce((acc, cur) => {
-    if (cur[1] > acc) return acc;
+  // 최소 면접
+  let other = arr[0][1];
+  let ans = 1;
 
-    ++ans;
-    return Math.min(acc, cur[1]);
-  }, 100001);
+  for (let i = 1; i < n; i++) {
+    if (arr[i][1] >= other) continue;
+    other = arr[i][1];
+    ans++;
+  }
 
   console.log(ans);
 }
