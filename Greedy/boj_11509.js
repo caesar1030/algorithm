@@ -4,18 +4,21 @@ let input = fs.readFileSync(filePath).toString().split('\n');
 let line = 0;
 
 const n = +input[line++];
-const height = input[line++].split(' ').map(Number);
-const arrow = new Array(1000000 + 1).fill(0);
 
-height.forEach((h) => {
-  if (arrow[h] === 0) {
-    arrow[h - 1] += 1;
+const arr = input[line++].split(' ').map(Number);
+const arrow = new Array(1e6 + 2).fill(0);
+
+let ans = 0;
+
+arr.forEach((val) => {
+  if (arrow[val + 1] === 0) {
+    ++ans;
+    arrow[val] += 1;
     return;
   }
 
-  arrow[h] -= 1;
-  arrow[h - 1] += 1;
+  arrow[val + 1] -= 1;
+  arrow[val] += 1;
 });
 
-const ans = arrow.reduce((acc, cur) => acc + cur, 0);
 console.log(ans);
