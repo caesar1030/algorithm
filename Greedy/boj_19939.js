@@ -3,15 +3,14 @@ const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
 let input = fs.readFileSync(filePath).toString().split('\n');
 let line = 0;
 
-let [n, k] = input[line++].split(' ').map(Number);
+const [n, k] = input[line++].split(' ').map(Number);
 
-const temp = (k * (k + 1)) / 2;
-
-if (temp > n) {
+if (n < (k * (k + 1)) / 2) {
   console.log(-1);
 } else {
-  n -= temp;
+  let ans = k - 1;
+  const rest = n - (k * (k + 1)) / 2;
+  if (rest % k) ans++;
 
-  if (n % k === 0) console.log(k - 1);
-  else console.log(k);
+  console.log(ans);
 }
