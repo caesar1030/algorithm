@@ -4,32 +4,34 @@ let input = fs.readFileSync(filePath).toString().split('\n');
 let line = 0;
 
 const [k, n] = input[line++].split(' ').map(Number);
-const arr = [];
 
+const arr = [];
 for (let i = 0; i < k; i++) {
   arr.push(+input[line++]);
 }
 
-const check = (mid) => {
-  const sum = arr.reduce((acc, cur) => acc + Math.floor(cur / mid), 0);
-  return sum >= n;
-};
-
+let l = 1;
+let r = Math.max(...arr);
 let ans = null;
-const solution = () => {
-  let l = 1;
-  let r = Math.max(...arr);
 
-  while (l <= r) {
-    const mid = Math.floor((l + r) / 2);
-    if (check(mid)) {
-      ans = mid;
-      l = mid + 1;
-    } else {
-      r = mid - 1;
-    }
-  }
+const check = (mid) => {
+  const rv = arr.reduce((acc, cur) => {
+    return acc + Math.floor(cur / mid);
+  }, 0);
+
+  return rv >= n;
 };
 
-solution();
+while (l <= r) {
+  const mid = Math.floor((l + r) / 2);
+
+  // console.log(mid, check(mid));
+  if (check(mid)) {
+    ans = mid;
+    l = mid + 1;
+  } else {
+    r = mid - 1;
+  }
+}
+
 console.log(ans);
