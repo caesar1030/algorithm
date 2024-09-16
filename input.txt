@@ -1,1 +1,2 @@
-ABACABA
+1
+ABBABB
