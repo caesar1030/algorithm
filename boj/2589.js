@@ -65,7 +65,7 @@ const bfs = (y, x) => {
   return rv;
 };
 
-let ans = 0;
+let ans = 1;
 for (let i = 0; i < row; i++) {
   for (let j = 0; j < col; j++) {
     if (arr[i][j] === "L") {
