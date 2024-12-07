@@ -3,12 +3,12 @@ const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 let input = fs.readFileSync(filePath).toString().split("\n");
 let line = 0;
 
-const [row, col] = input[line++].split(" ").map(Number);
+const [n, m] = input[line++].split(" ").map(Number);
 
 const arr = [];
-for (let i = 0; i < row; i++) {
-  const temp = input[line++];
-  arr.push(temp);
+
+for (let i = 0; i < n; i++) {
+  arr.push(input[line++].split(""));
 }
 
 class Queue {
@@ -34,44 +34,37 @@ class Queue {
   }
 }
 
+let ans = Number.MIN_SAFE_INTEGER;
+
 const dy = [-1, 0, 1, 0];
 const dx = [0, -1, 0, 1];
 
-const bfs = (y, x) => {
-  const visited = [...new Array(row)].map(() => new Array(col).map(() => 0));
+for (let i = 0; i < n; i++) {
+  for (let j = 0; j < m; j++) {
+    if (arr[i][j] !== "L") continue;
 
-  const q = new Queue();
-  q.push([y, x]);
-  visited[y][x] = 1;
-  let rv = 1;
+    const visited = [...new Array(n)].map(() => new Array(m).fill(0));
+    const q = new Queue();
 
-  while (!q.isEmpty()) {
-    const [nowY, nowX] = q.pop();
+    q.push([i, j]);
+    visited[i][j] = 1;
 
-    for (let i = 0; i < 4; i++) {
-      const nextY = nowY + dy[i];
-      const nextX = nowX + dx[i];
+    while (!q.isEmpty()) {
+      const [nowY, nowX] = q.pop();
 
-      if (nextY >= row || nextY < 0 || nextX >= col || nextX < 0) continue;
-      if (visited[nextY][nextX]) continue;
-      if (arr[nextY][nextX] !== "L") continue;
+      for (let i = 0; i < 4; i++) {
+        const nextY = nowY + dy[i];
+        const nextX = nowX + dx[i];
 
-      q.push([nextY, nextX]);
-      visited[nextY][nextX] = visited[nowY][nowX] + 1;
-      rv = Math.max(ans, visited[nextY][nextX]);
-    }
-  }
+        if (nextY >= n || nextY < 0 || nextX >= m || nextX < 0) continue;
+        if (visited[nextY][nextX] || arr[nextY][nextX] !== "L") continue;
 
-  return rv;
-};
-
-let ans = 1;
-for (let i = 0; i < row; i++) {
-  for (let j = 0; j < col; j++) {
-    if (arr[i][j] === "L") {
-      ans = Math.max(ans, bfs(i, j));
+        q.push([nextY, nextX]);
+        visited[nextY][nextX] = visited[nowY][nowX] + 1;
+        ans = Math.max(visited[nextY][nextX] - 1, ans);
+      }
     }
   }
 }
 
-console.log(ans - 1);
+console.log(ans);
