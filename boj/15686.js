@@ -4,7 +4,23 @@ let input = fs.readFileSync(filePath).toString().split("\n");
 let line = 0;
 
 const [n, m] = input[line++].split(" ").map(Number);
+
 const arr = [];
+const chickens = [];
+const homes = [];
+
+for (let i = 0; i < n; i++) {
+  arr.push(input[line++].split(" ").map(Number));
+  for (let j = 0; j < n; j++) {
+    if (arr[i][j] === 1) {
+      homes.push([i, j]);
+    } else if (arr[i][j] === 2) {
+      chickens.push([i, j]);
+    }
+  }
+}
+
+const selected = [];
 
 class Queue {
   constructor() {
@@ -13,15 +29,15 @@ class Queue {
     this.tail = 0;
   }
 
-  pop() {
-    const rv = this.items[this.header];
-    delete this.items[this.header++];
-
-    return rv;
+  push(item) {
+    this.items[this.header++] = item;
   }
 
-  push(item) {
-    this.items[this.tail++] = item;
+  pop() {
+    const rv = this.items[this.tail];
+    delete this.items[this.tail++];
+
+    return rv;
   }
 
   isEmpty() {
@@ -29,74 +45,57 @@ class Queue {
   }
 }
 
-for (let i = 0; i < n; i++) {
-  const row = input[line++].split(" ").map(Number);
-  arr.push(row);
-}
-
-const dominate = [];
-
-for (let i = 0; i < n; i++) {
-  for (let j = 0; j < n; j++) {
-    if (arr[i][j] === 2) {
-      dominate.push({
-        row: i,
-        col: j,
-      });
-    }
-  }
-}
-
-const selected = [];
-
 const dy = [-1, 0, 1, 0];
 const dx = [0, -1, 0, 1];
 
-const bfs = () => {
-  const q = new Queue();
+let ans = Number.MAX_SAFE_INTEGER;
+const check = () => {
   const visited = [...new Array(n)].map(() => new Array(n).fill(0));
-  for (let i = 0; i < selected.length; i++) {
-    q.push(selected[i]);
-    visited[selected[i].row][selected[i].col] = 1;
-  }
+  const q = new Queue();
 
-  let rv = 0;
+  selected.forEach((index) => {
+    const [y, x] = chickens[index];
+
+    q.push([y, x]);
+    visited[y][x] = 1;
+  });
+
   while (!q.isEmpty()) {
-    const { row: nowY, col: nowX } = q.pop();
+    const [nowY, nowX] = q.pop();
 
     for (let i = 0; i < 4; i++) {
-      const ny = nowY + dy[i];
-      const nx = nowX + dx[i];
+      const nextY = nowY + dy[i];
+      const nextX = nowX + dx[i];
 
-      if (ny < 0 || ny >= n || nx < 0 || nx >= n) continue;
-      if (visited[ny][nx]) continue;
+      if (nextY >= n || nextY < 0 || nextX >= n || nextX < 0) continue;
+      if (visited[nextY][nextX]) continue;
 
-      q.push({ row: ny, col: nx });
-      visited[ny][nx] = visited[nowY][nowX] + 1;
-      if (arr[ny][nx] === 1) {
-        rv += visited[ny][nx] - 1;
-      }
+      q.push([nextY, nextX]);
+      visited[nextY][nextX] = visited[nowY][nowX] + 1;
     }
   }
 
-  return rv;
+  const sum = homes.reduce((acc, cur) => {
+    const [y, x] = cur;
+    return acc + visited[y][x] - 1;
+  }, 0);
+
+  ans = Math.min(ans, sum);
 };
 
-let ans = 987654321;
-const select = (depth) => {
+const combi = (depth) => {
   if (selected.length === m) {
-    const rv = bfs();
+    check();
 
-    ans = Math.min(ans, rv);
     return;
   }
-  for (let i = depth; i < dominate.length; i++) {
-    selected.push(dominate[i]);
-    select(i + 1);
+
+  for (let i = depth; i < chickens.length; i++) {
+    selected.push(i);
+    combi(i + 1);
     selected.pop();
   }
 };
 
-select(0);
-
+combi(0);
 console.log(ans);
