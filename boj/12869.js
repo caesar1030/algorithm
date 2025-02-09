@@ -1,66 +1,66 @@
-const fs = require("fs");
-const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-let input = fs.readFileSync(filePath).toString().split("\n");
+const fs = require('fs');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+let input = fs.readFileSync(filePath).toString().split('\n');
 let line = 0;
 
 const n = +input[line++];
-const scv = input[line++].split(" ").map(Number);
-
-const arr = [...new Array(61)].map(() => {
-  const temp = [...new Array(61)].map(() => new Array(61).fill(0));
-
-  return temp;
-});
-
-const d = [
-  [9, 3, 1],
-  [9, 1, 3],
-  [3, 9, 1],
-  [3, 1, 9],
-  [1, 9, 3],
-  [1, 3, 9],
-];
+const scvs = input[line++].split(' ').map(Number);
 
 class Queue {
   constructor() {
     this.items = {};
-    this.header = 0;
+    this.head = 0;
     this.tail = 0;
   }
 
   push(item) {
-    this.items[this.tail++] = item;
+    this.items[this.head++] = item;
   }
 
   pop() {
-    const rv = this.items[this.header];
-    delete this.items[this.header++];
+    const rv = this.items[this.tail];
+    delete this.items[this.tail++];
 
     return rv;
   }
 
   isEmpty() {
-    return this.header === this.tail;
+    return this.tail === this.head;
   }
 }
 
-const q = new Queue();
+const dd = [
+  [-9, -3, -1],
+  [-9, -1, -3],
+  [-3, -9, -1],
+  [-3, -1, -9],
+  [-1, -9, -3],
+  [-1, -3, -9],
+];
 
-const t = [0, 0, 0];
-scv.map((val, idx) => (t[idx] = val));
-q.push(t);
-arr[t[0]][t[1]][t[2]] = 1;
+for (let i = n; i < 3; i++) {
+  scvs[i] = 0;
+}
+
+const arr = [...new Array(61)].map(() =>
+  [...new Array(61)].map(() => [...new Array(61).fill(0)]),
+);
+
+const q = new Queue();
+arr[scvs[0]][scvs[1]][scvs[2]] = 1;
+q.push([scvs[0], scvs[1], scvs[2]]);
 
 while (!q.isEmpty()) {
-  const now = q.pop();
+  const [first, second, third] = q.pop();
 
   for (let i = 0; i < 6; i++) {
-    const next = now.map((val, idx) => Math.max(val - d[i][idx], 0));
+    const nf = Math.max(0, first + dd[i][0]);
+    const ns = Math.max(0, second + dd[i][1]);
+    const nt = Math.max(0, third + dd[i][2]);
 
-    if (arr[next[0]][next[1]][next[2]]) continue;
-
-    q.push([next[0], next[1], next[2]]);
-    arr[next[0]][next[1]][next[2]] = arr[now[0]][now[1]][now[2]] + 1;
+    if (arr[nf][ns][nt]) continue;
+    arr[nf][ns][nt] = arr[first][second][third] + 1;
+    q.push([nf, ns, nt]);
   }
 }
 
